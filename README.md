@@ -14,13 +14,19 @@ You can enter something positive, save it to a local database, and reflect on ot
 
 # Tech Stack
 
-Vite: easily setting up Electron and React
-Electron: so its its own app
-JavaScript: frontend
-React: mainly for rendering entries dynamically
-Flask: connect to backend
-Python: handling Flask requests
-SQLite: storing entries in a local database
+## Vite: easily setting up Electron and React
+
+## Electron: so its its own app
+
+## JavaScript: frontend
+
+## React: mainly for rendering entries dynamically
+
+## Flask: connect to backend
+
+## Python: handling Flask requests
+
+## SQLite: storing entries in a local database
 
 # Setup
 
@@ -29,4 +35,5 @@ In short (as of now): npm run dev for frontend folder. activate venv for backend
 
 # Versions
 
+0.1.1 Fix issue #7
 0.1 Initial release

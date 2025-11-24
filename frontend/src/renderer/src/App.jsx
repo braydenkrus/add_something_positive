@@ -19,7 +19,11 @@ function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ new_entry: entryQuery })
     })
-    alert('You entered: ' + entryQuery)
+    alert(
+      'You entered: ' +
+        entryQuery +
+        "\nLet's take a look at some other positive things you've entered!"
+    )
     console.log(response)
     const fetchedEntries = await fetch('http://127.0.0.1:5000/flask/entries', {
       method: 'GET',
