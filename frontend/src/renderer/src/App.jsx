@@ -16,17 +16,28 @@ function App() {
   const [showSpinner, setShowSpinner] = useState(false)
 
   // for showing delete alert message
-  const [showDeleteAlert, setShowDeleteAlert] = useState(false)
+  // const [showDeleteAlert, setShowDeleteAlert] = useState(false)
 
-  // for when we are ready to delete (user said yes to delete)
-  // true for now, need to fix
-  const [readyToDelete, setReadyToDelete] = useState(true)
+  // need to fix
+  // const [readyToDelete, setReadyToDelete] = useState(true)
+
+  // https://www.dhiwise.com/post/a-step-by-step-guide-to-retrieving-input-values-in-react
+  // to be more explicit with how I'm writing this. Also, this should be a good resource
+  // if I want to expand on the inputs.
+  const handleQueryChange = (e) => {
+    setEntryQuery(e.target.value)
+  }
 
   // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
   // save entry, retrieve entries
   const saveEntry = async (e) => {
-    setShowSpinner(true)
     e.preventDefault()
+    // https://www.w3schools.com/Jsref/met_form_reset.asp
+    document.getElementById('queryForm').reset()
+    // https://github.com/electron/electron/issues/22923 May help with Issue #4.
+    // Based on this, I should follow through with making custom popups.
+    setEntryQuery('') // TODO: part of fixing Issue #4, not complete yet.
+    setShowSpinner(true)
     const response = await fetch('http://127.0.0.1:5000/flask/write', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -45,38 +56,44 @@ function App() {
     const finalEntries = await fetchedEntries.json()
     setEntries(finalEntries)
     setReady(true)
-    setEntryQuery('') // TODO: part of fixing Issue #4, not complete yet.
     setShowSpinner(false)
   }
   // delete entry, update database, retrieve
   const executeDelete = async (id) => {
-    setShowDeleteAlert(true)
-    setShowSpinner(true)
-    setReady(false)
-    if (readyToDelete) {
+    /* 
+    Note that this is an Electron app. If this was a browser app,
+    the prompt would be stylized according to the web browser 
+    https://developer.mozilla.org/en-US/docs/Web/API/Window/confirm
+    */
+    const deleting = confirm('Are you sure you want to delete?')
+    if (deleting) {
+      // setShowDeleteAlert(false)
+      setShowSpinner(true)
+      setReady(false)
       const deletion = await fetch('http://127.0.0.1:5000/flask/delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ delete_entry: id })
       })
-      // TODO: Randomizing the order does not make sense for deletion.
-      const fetchedEntries = await fetch('http://127.0.0.1:5000/flask/entries', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      })
-      // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch again
-      const finalEntries = await fetchedEntries.json()
+      // https://www.geeksforgeeks.org/javascript/remove-array-element-based-on-object-property-in-javascript/
+      // for fix. match the ID and delete locally alongside database.
+      // avoids a second retrieval and having to possibly retrieve the random seed.
+      let finalEntries = entries
+      let rem = finalEntries.findIndex((finalEntries) => finalEntries.id === id)
+      finalEntries.splice(rem, 1)
       setEntries(finalEntries)
       setReady(true)
       setShowSpinner(false)
     }
-    setShowDeleteAlert(false)
-    setReadyToDelete(false)
+    // setShowDeleteAlert(false)
+    // setReadyToDelete(false)
   }
 
+  /*
   const setDelete = () => {
     setReadyToDelete(true)
   }
+    */
 
   return (
     <>
@@ -85,14 +102,14 @@ function App() {
       </h1>
       <p>What is something good that happened today?</p>
       <div className="mb-3">
-        <form onSubmit={saveEntry}>
+        <form id="queryForm" onSubmit={saveEntry}>
           <input
             className="form-control"
             type="text"
             name="enter-message"
             placeholder="++++++++++++++++++++++"
             value={entryQuery}
-            onChange={(e) => setEntryQuery(e.target.value)}
+            onChange={handleQueryChange}
           />
           {/* https://stackoverflow.com/questions/9114664/spacing-between-elements 
       https://bobbyhadz.com/blog/react-jsx-add-whitespace-between-elements*/}
@@ -123,7 +140,7 @@ function App() {
           <div></div>
         )}
       </div>
-      <div>{showDeleteAlert ? <DeleteAlert onDelete={setDelete} /> : <div></div>}</div>
+      {/*  <div>{showDeleteAlert ? <DeleteAlert onDelete={setDelete} /> : <div></div>}</div>*/}
     </>
   )
 }
