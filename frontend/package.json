@@ -20,7 +20,8 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
-    "bootstrap": "^5.3.8"
+    "bootstrap": "^5.3.8",
+    "react-bootstrap": "^2.10.10"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^2.1.0",
