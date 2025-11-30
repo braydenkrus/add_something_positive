@@ -36,6 +36,8 @@ In short (as of now): npm run dev for frontend folder. activate venv for backend
 
 # Versions
 
+0.1.3 Fix issue #3, note how issue #4 can be fixed.
+
 0.1.2 Fix description formatting + fix spinner
 
 0.1.1 Fix issue #7
