@@ -4,6 +4,12 @@ import { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Modal from 'react-bootstrap/Modal'
 
+// had weird issues with this. in short enabled nodeIntegration and contextIsolation
+// in out/main/index.js AND src/main/index.js
+const { spawn } = require('node:child_process')
+
+const proc = spawn('python', ['../backend/main.py'])
+
 function App() {
   // current entry in textbox
   const [entryQuery, setEntryQuery] = useState('')
@@ -153,7 +159,7 @@ function App() {
       </div>
       <Modal show={showDeletionModal} onHide={handleDeletionClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Deletion alert</Modal.Title>
+          <Modal.Title>Deletion</Modal.Title>
         </Modal.Header>
         <Modal.Body>Are you sure you want to delete this entry?</Modal.Body>
         <Modal.Footer>
@@ -167,7 +173,7 @@ function App() {
       </Modal>
       <Modal show={showSubmissionModal} onHide={handleSubmissionClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Entry alert</Modal.Title>
+          <Modal.Title>Entry!</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           You entered: {entryQuery}. Let's take a look at some other positive things you've entered!

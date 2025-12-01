@@ -11,14 +11,14 @@ CORS(app)
 @app.route('/flask/entries', methods=['GET'])
 def entries():
     # connect per request to be safe
-    connection = sqlite3.connect("dp.db")
+    connection = sqlite3.connect("main.db")
 
     connection.row_factory = sqlite3.Row # "format" it to be nicer for React. goes before cursor
     cursor = connection.cursor()
     
-    cursor.execute("CREATE TABLE IF NOT EXISTS dp (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATE DEFAULT (date('now', 'localtime')), data TEXT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS main (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATE DEFAULT (date('now', 'localtime')), data TEXT)")
     # end connection section of code
-    cursor.execute("SELECT id, data FROM dp")
+    cursor.execute("SELECT id, data FROM main")
     previous_messages = cursor.fetchall()
     previous_messages = [dict(row) for row in previous_messages]
     random.shuffle(previous_messages)
@@ -30,28 +30,28 @@ def entries():
 
 @app.route('/flask/write', methods=['POST'])
 def write():
-    connection = sqlite3.connect("dp.db")
+    connection = sqlite3.connect("main.db")
     connection.row_factory = sqlite3.Row 
 
     cursor = connection.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS dp (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATE DEFAULT (date('now', 'localtime')), data TEXT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS main (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATE DEFAULT (date('now', 'localtime')), data TEXT)")
     entry = request.json['new_entry']
     print(entry)
-    cursor.execute("INSERT INTO dp (data) VALUES (?)", (entry,))
+    cursor.execute("INSERT INTO main (data) VALUES (?)", (entry,))
     connection.commit()
     connection.close()
     return "DONE"
 
 @app.route('/flask/delete', methods=['POST'])
 def delete():
-    connection = sqlite3.connect("dp.db")
+    connection = sqlite3.connect("main.db")
     connection.row_factory = sqlite3.Row
 
     cursor = connection.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS dp (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATE DEFAULT (date('now', 'localtime')), data TEXT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS main (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATE DEFAULT (date('now', 'localtime')), data TEXT)")
     entry = request.json['delete_entry']
   
-    cursor.execute("DELETE FROM dp WHERE id = ?", (entry,))
+    cursor.execute("DELETE FROM main WHERE id = ?", (entry,))
     connection.commit()
     connection.close()
     return "DONE"

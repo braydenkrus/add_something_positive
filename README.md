@@ -30,11 +30,13 @@ SQLite: storing entries in a local database
 
 # Setup
 
-WIP: Need to do a proper write-up, and make execution as easy as possible.
+backend: pip install -r requirements.txt
 
-In short (as of now): npm run dev for frontend folder. activate venv for backend and run dp.py
+frontend: npm run dev
 
 # Versions
+
+0.1.4 Fix issues #4 and #5
 
 0.1.3 Fix issue #3, note how issue #4 can be fixed.
 
