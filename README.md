@@ -1,40 +1,44 @@
 # add_something_positive
 
-# Disclaimer
+## Disclaimer
 
 This app is pretty early on in its development, and things are subject to change.
 
-# Purpose
+## Purpose
 
-Everyday life can get hectic, especially as someone living with ADHD and anxiety. I've found that taking some time to keep track of at least one positive thing per day helps me slow down and reflect.
+Everyday life can get hectic, especially as someone living with ADHD and anxiety. With this in mind, I've found that taking time daily to slow down and note one positive thing helps me have a positive outlook on every day. As I find this process important, I designed this app to serve this purpose.
 
-# What this app does
+## Functionality
 
-You can enter something positive, save it to a local database, and reflect on other positive things you've written. You also have the option to delete entries too.
+You enter something positive and save it. Afterwards, you can see previous messages you've saved to reflect on positive moments. You also have the option to delete messages too.
 
-# Tech Stack
+## Tech Stack
 
-Vite: easily setting up Electron and React
+(This is very much overdone, especially considering the scale of this app. However, doing it this way helped me learn a lot of new things! Also, considering everything including backend is locally ran, I designed the app with that in mind.)
 
-Electron: so its its own app
+Vite: allowed me to set up Electron and React with ease
 
-JavaScript: frontend
+Electron: I wanted this project to run as its own app
 
-React: mainly for rendering entries dynamically
+JavaScript + React: for UI, dynamically rendering previous messages, managing state
 
-Flask: connect to backend
+Node.js: start up Python backend
 
-Python: handling Flask requests
+Flask: connect to Python backend and send requests
 
-SQLite: storing entries in a local database
+Python: handling Flask requests (communicating with frontend)
 
-# Setup
+SQLite3: storing entries in a local database
+
+## Setup
+
+(This will be updated)
 
 backend: pip install -r requirements.txt
 
 frontend: npm run dev
 
-# Versions
+## Versions
 
 0.1.4 Fix issues #4 and #5
 

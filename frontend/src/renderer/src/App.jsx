@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal'
 
 // had weird issues with this. in short enabled nodeIntegration and contextIsolation
 // in out/main/index.js AND src/main/index.js
+// "overwriting": I was doing it in out instead of src!
 const { spawn } = require('node:child_process')
 
 const proc = spawn('python', ['../backend/main.py'])
