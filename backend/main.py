@@ -18,7 +18,7 @@ def entries():
     
     cursor.execute("CREATE TABLE IF NOT EXISTS main (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATE DEFAULT (date('now', 'localtime')), data TEXT)")
     # end connection section of code
-    cursor.execute("SELECT id, data FROM main")
+    cursor.execute("SELECT id, date, data FROM main")
     previous_messages = cursor.fetchall()
     previous_messages = [dict(row) for row in previous_messages]
     random.shuffle(previous_messages)

@@ -7,7 +7,7 @@ function Entry({ entry, onDelete }) {
         Delete
       </button>
     </div>
-  )
+  );
 }
 
-export default Entry
+export default Entry;
