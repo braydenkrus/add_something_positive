@@ -25,7 +25,6 @@ def entries():
     connection.close()
     # then return jsonify
     previous_messages = jsonify(previous_messages)
-    print(f"{previous_messages.get_json()}")
     return previous_messages
 
 @app.route('/flask/write', methods=['POST'])
@@ -36,7 +35,6 @@ def write():
     cursor = connection.cursor()
     cursor.execute("CREATE TABLE IF NOT EXISTS main (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATE DEFAULT (date('now', 'localtime')), data TEXT)")
     entry = request.json['new_entry']
-    print(entry)
     cursor.execute("INSERT INTO main (data) VALUES (?)", (entry,))
     connection.commit()
     connection.close()

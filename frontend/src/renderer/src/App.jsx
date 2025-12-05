@@ -11,6 +11,10 @@ const { spawn } = require('node:child_process')
 
 const proc = spawn('python', ['../backend/main.py'])
 
+proc.stderr.on('error', (err) => {
+  console.error(`stderr: ${err}`)
+})
+
 function App() {
   // current entry in textbox
   const [entryQuery, setEntryQuery] = useState('')
@@ -44,11 +48,6 @@ function App() {
   // to take note of what is currently being deleted
   const [entryToDelete, setEntryToDelete] = useState(-1)
 
-  const handleWantToDeleteClose = () => {
-    setReadyToDelete(true)
-    handleDeletionClose()
-  }
-
   // https://www.dhiwise.com/post/a-step-by-step-guide-to-retrieving-input-values-in-react
   // to be more explicit with how I'm writing this. Also, this should be a good resource
   // if I want to expand on the inputs.
@@ -56,13 +55,25 @@ function App() {
     setEntryQuery(e.target.value)
   }
 
+  // not ready to show entries, show spinner
+  const startLoading = () => {
+    setReady(false)
+    setShowSpinner(true)
+  }
+
+  // ready to show entries, don't show spinner
+  const stopLoading = () => {
+    setReady(true)
+    setShowSpinner(false)
+  }
+
   // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
   // save entry, retrieve entries
   const saveEntry = async (e) => {
     e.preventDefault()
+    startLoading()
     // https://github.com/electron/electron/issues/22923 May help with Issue #4.
     // This was the fix!
-    setShowSpinner(true)
     handleSubmissionOpen()
     const response = await fetch('http://127.0.0.1:5000/flask/write', {
       method: 'POST',
@@ -76,16 +87,14 @@ function App() {
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch again
     const finalEntries = await fetchedEntries.json()
     setEntries(finalEntries)
-    setReady(true)
-    setShowSpinner(false)
+    stopLoading()
     // https://www.w3schools.com/Jsref/met_form_reset.asp
     document.getElementById('queryForm').reset()
   }
   // delete entry, update database, retrieve
   const executeDelete = async () => {
     let id = entryToDelete
-    setShowSpinner(true)
-    setReady(false)
+    startLoading()
     const deletion = await fetch('http://127.0.0.1:5000/flask/delete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -98,8 +107,8 @@ function App() {
     let rem = finalEntries.findIndex((finalEntries) => finalEntries.id === id)
     finalEntries.splice(rem, 1)
     setEntries(finalEntries)
-    setReady(true)
-    setShowSpinner(false)
+    setEntryToDelete(-1)
+    stopLoading()
     handleDeletionClose()
   }
 
@@ -108,17 +117,9 @@ function App() {
     handleDeletionOpen()
   }
 
-  /*
-  const setDelete = () => {
-    setReadyToDelete(true)
-  }
-    */
-
   return (
     <>
-      <h1>
-        Add something <span className="react">positive</span> to your day
-      </h1>
+      <h1>Add something positive to your day</h1>
       <div className="mb-3">
         <form id="queryForm" onSubmit={saveEntry}>
           <input
