@@ -54,6 +54,54 @@ def delete():
     connection.close()
     return "DONE"
 
+### Journaling ###
+@app.route('/flask/retrieveJournals', methods=['GET'])
+def retrieve_journals():
+    # connect per request to be safe
+    connection = sqlite3.connect("main.db")
+
+    connection.row_factory = sqlite3.Row # "format" it to be nicer for React. goes before cursor
+    cursor = connection.cursor()
+    
+    cursor.execute("CREATE TABLE IF NOT EXISTS journals (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATE DEFAULT (date('now', 'localtime')), data TEXT)")
+    # end connection section of code
+    cursor.execute("SELECT id, date, data FROM journals")
+    previous_journals = cursor.fetchall()
+    previous_journals = [dict(row) for row in previous_journals]
+    connection.close()
+    # then return jsonify
+    previous_messages = jsonify(previous_journals)
+    return previous_journals
+
+@app.route('/flask/saveJournal', methods=['POST'])
+def save_journal():
+    connection = sqlite3.connect("main.db")
+    connection.row_factory = sqlite3.Row 
+
+    cursor = connection.cursor()
+    cursor.execute("CREATE TABLE IF NOT EXISTS journals (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATE DEFAULT (date('now', 'localtime')), data TEXT)")
+    journal = request.json['new_journal']
+    cursor.execute("INSERT INTO journals (data) VALUES (?)", (journal,))
+    connection.commit()
+    connection.close()
+    return "DONE"
+
+@app.route('/flask/deleteJournal', methods=['POST'])
+def delete_journal():
+    connection = sqlite3.connect("main.db")
+    connection.row_factory = sqlite3.Row
+
+    cursor = connection.cursor()
+    cursor.execute("CREATE TABLE IF NOT EXISTS journals (id INTEGER PRIMARY KEY AUTOINCREMENT, date DATE DEFAULT (date('now', 'localtime')), data TEXT)")
+    journal = request.json['delete_journal']
+  
+    cursor.execute("DELETE FROM journals WHERE id = ?", (journal,))
+    connection.commit()
+    connection.close()
+    return "DONE"
+
+
+
 
 if __name__ == "__main__":
     app.run()

@@ -71,10 +71,16 @@ function PositiveMessages() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ new_entry: entryQuery })
     });
+    if (!response.ok) {
+      throw new Error('Response status: ${response.status}');
+    }
     const fetchedEntries = await fetch('http://127.0.0.1:5000/flask/entries', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     });
+    if (!fetchedEntries.ok) {
+      throw new Error('Response status: ${fetchedEntries.status}');
+    }
     const finalEntries = await fetchedEntries.json();
     setEntries(finalEntries);
     stopLoading();
@@ -83,14 +89,17 @@ function PositiveMessages() {
   // delete entry, update database, retrieve
   const executeDelete = async () => {
     startLoading();
-    const deletion = await fetch('http://127.0.0.1:5000/flask/delete', {
+    const response = await fetch('http://127.0.0.1:5000/flask/delete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ delete_entry: entryToDelete })
     });
+    if (!response.ok) {
+      throw new Error('Response status: ${response.status}');
+    }
     updateEntries();
-    handleDeletionClose();
     stopLoading();
+    handleDeletionClose();
   };
 
   const setEntryAndModal = (id) => {
