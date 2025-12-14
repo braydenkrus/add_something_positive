@@ -86,6 +86,7 @@ def save_journal():
     connection.close()
     return "DONE"
 
+'''
 @app.route('/flask/deleteJournal', methods=['POST'])
 def delete_journal():
     connection = sqlite3.connect("main.db")
@@ -99,7 +100,7 @@ def delete_journal():
     connection.commit()
     connection.close()
     return "DONE"
-
+'''
 
 
 

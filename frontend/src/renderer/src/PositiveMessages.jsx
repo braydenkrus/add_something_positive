@@ -72,14 +72,14 @@ function PositiveMessages() {
       body: JSON.stringify({ new_entry: entryQuery })
     });
     if (!response.ok) {
-      throw new Error('Response status: ${response.status}');
+      throw new Error(`Response status: ${response.status}`);
     }
     const fetchedEntries = await fetch('http://127.0.0.1:5000/flask/entries', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     });
     if (!fetchedEntries.ok) {
-      throw new Error('Response status: ${fetchedEntries.status}');
+      throw new Error(`Response status: ${fetchedEntries.status}`);
     }
     const finalEntries = await fetchedEntries.json();
     setEntries(finalEntries);
@@ -95,7 +95,7 @@ function PositiveMessages() {
       body: JSON.stringify({ delete_entry: entryToDelete })
     });
     if (!response.ok) {
-      throw new Error('Response status: ${response.status}');
+      throw new Error(`Response status: ${response.status}`);
     }
     updateEntries();
     stopLoading();
