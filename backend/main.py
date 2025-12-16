@@ -68,6 +68,7 @@ def retrieve_journals():
     cursor.execute("SELECT id, date, data FROM journals")
     previous_journals = cursor.fetchall()
     previous_journals = [dict(row) for row in previous_journals]
+    previous_journals.reverse()
     connection.close()
     # then return jsonify
     previous_messages = jsonify(previous_journals)

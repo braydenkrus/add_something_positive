@@ -12,6 +12,33 @@ function Journaling() {
 
   const [showSpinner, setShowSpinner] = useState(false);
 
+  // not ready to show entries, show spinner
+  const startLoading = () => {
+    setShowJournals(false);
+    setShowSpinner(true);
+  };
+
+  // ready to show entries, don't show spinner
+  const stopLoading = () => {
+    setShowJournals(true);
+    setShowSpinner(false);
+  };
+
+  const retrieveJournals = async () => {
+    // order doesn't matter since it is always the same
+    startLoading();
+    const fetchedJournals = await fetch('http://127.0.0.1:5000/flask/retrieveJournals', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!fetchedJournals.ok) {
+      throw new Error(`Response status: ${fetchedJournals.status}`);
+    }
+    const finalJournals = await fetchedJournals.json();
+    setJournals(finalJournals);
+    stopLoading();
+  };
+
   const saveJournal = async (e) => {
     e.preventDefault();
     const response = await fetch('http://127.0.0.1:5000/flask/saveJournal', {
@@ -22,16 +49,7 @@ function Journaling() {
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
-    const fetchedJournals = await fetch('http://127.0.0.1:5000/flask/retrieveJournals', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    });
-    if (!fetchedJournals.ok) {
-      throw new Error(`Response status: ${fetchedJournals.status}`);
-    }
-    const finalJournals = await fetchedJournals.json();
-    setJournals(finalJournals);
-    setShowJournals(true);
+    retrieveJournals();
   };
 
   return (
@@ -66,7 +84,9 @@ function Journaling() {
           ))}
         </div>
       ) : showSpinner ? (
-        <></>
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
       ) : (
         <></>
       )}
